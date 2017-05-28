@@ -1,0 +1,36 @@
+- hosts: jenkins
+  become: true
+
+  tasks:
+        - name: Update apt cache
+          apt: update_cache=yes
+
+        - name: Installing necessary packets 
+          apt: name={{ item }} update_cache=yes state=present
+          with_items:
+           - nginx
+           - openjdk-7-jdk
+        
+        - name: Add Jenkins apt repository key.
+          apt_key:
+            url: https://jenkins-ci.org/debian/jenkins-ci.org.key
+            state: present
+            validate_certs: no
+
+        - name: Add Jenkins apt repository.
+          apt_repository:
+            repo: deb http://pkg.jenkins.io/debian-stable binary/
+            state: present
+            update_cache: yes
+
+        - name: Installing Jenkins 
+          apt: name={{ item }} update_cache=yes state=present
+          with_items:
+           - jenkins
+
+        - name: Reading jenkins password
+          shell: cat /var/lib/jenkins/secrets/initialAdminPassword 
+          register: JenkinsPass
+
+        - debug:
+            msg: "Access on IP: {{ ansible_eth1.ipv4.address }}:8080 with password: {{JenkinsPass.stdout}}"
