@@ -29,7 +29,7 @@
            - jenkins
 
         - name: Reading jenkins password
-          shell: cat /var/lib/jenkins/secrets/initialAdminPassword 
+          shell: cat /var/lib/jenkins/secrets/initialAdminPassword
           register: JenkinsPass
 
         - debug:
