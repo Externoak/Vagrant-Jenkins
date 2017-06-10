@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
     jenkins.vm.network :public_network
     jenkins.vm.provider "virtualbox" do |vbox|
       vbox.customize ["modifyvm", :id, "--cpus", "1"]
-      vbox.customize ["modifyvm", :id, "--memory", "1024"]
+      vbox.customize ["modifyvm", :id, "--memory", "2048"]
       vbox.customize ["modifyvm", :id, "--name", "jenkins"]
     end
     jenkins.vm.provision :ansible do |ansible|

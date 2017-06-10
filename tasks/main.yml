@@ -29,8 +29,19 @@
            - jenkins
 
         - name: Reading jenkins password
+          stat:
+            path: /var/lib/jenkins/secrets/initialAdminPassword
+          register: Checkfile
+
+        - name: Reading jenkins password
           shell: cat /var/lib/jenkins/secrets/initialAdminPassword
           register: JenkinsPass
+          when: Checkfile.stat.exists == True
 
         - debug:
             msg: "Access on IP: {{ ansible_eth1.ipv4.address }}:8080 with password: {{JenkinsPass.stdout}}"
+          when: Checkfile.stat.exists == True
+
+        - debug:
+            msg: "Ansible was not enable to read Jenkins initialAdminPassword please open it manually or rerun this playbook"
+          when: Checkfile.stat.exists == False
